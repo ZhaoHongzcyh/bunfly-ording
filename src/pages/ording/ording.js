@@ -55,6 +55,9 @@ class Ording extends Component {
   	}
   }
   componentWillMount(){
+  	setTimeout(function(){
+  		
+  	})
 	var socket = io("/");
 		//分发action
 		store.dispatch(produce_action("send_socket",socket));
