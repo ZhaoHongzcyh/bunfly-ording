@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "邦飞点餐系统",
+  "main": "index.js",
+  "scripts": {
+    "start": "set NODE_ENV=production&node index.js",
+    "test": "set NODE_ENV=devlopment&node index.js"
+  },
+  "author": "ZhaoHong",
+  "license": "ISC",
+  "dependencies": {
+    "base64url": "^2.0.0",
+    "engine.io": "^3.2.0",
+    "moment": "^2.21.0",
+    "mysql": "^2.15.0",
+    "socket.io": "^2.0.4"
+  }
+}

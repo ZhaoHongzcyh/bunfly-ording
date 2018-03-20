@@ -1,0 +1,46 @@
+.ording{
+	position:relative;
+	width:100%;
+}
+
+/*用户选择菜单栏*/
+.ordingMenu{
+	width:100%;
+	border:1px solid red;
+}
+.ordingMenu>ul{
+	list-style: none;
+	width:80%;
+	margin:0px;
+	padding:0px;
+	text-align: center;
+	font-size:1.8rem;
+}
+
+.ordingMenu:after{
+	content:" ";
+	display:block;
+	clear:both;
+}
+.ordingMenu>ul>li{
+	width:16%;
+	height:6rem;
+	float:left;
+	line-height: 6rem;
+	margin:0px;
+	border:1px solid black;
+}
+
+.ordingAll{
+	width:100%;
+	border:1px solid red;
+}
+
+.ordingContent{
+	
+}
+
+.ordingList{
+	border:1px solid black;
+
+}

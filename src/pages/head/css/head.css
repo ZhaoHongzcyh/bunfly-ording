@@ -1,0 +1,15 @@
+.ording-title{
+	color:rgba(0,143,215,1);
+	width:100%;
+	height:5rem;
+	font-size:2rem;
+	line-height:5rem;
+	background-color:rgba(246,246,246,1);
+	border:0.1rem solid red;
+}
+.ording-header,.ording-header>h3{
+	margin:0px;
+	padding:0px;
+	height:100%;
+	line-height: 5rem;
+}

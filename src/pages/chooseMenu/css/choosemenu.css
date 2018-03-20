@@ -1,0 +1,38 @@
+.menuhead{
+	position: relative;
+	display: flex;
+	width:90%;
+	border:1px solid black;
+}
+.menuhead>div{
+	width:20%;
+}
+.metadishes{
+	font-size:1.5rem;
+	background-color:rgba(0,143,215,1);
+}
+.menucommon{
+	font-size:1.8rem;
+	height:2rem;
+	text-align: center;
+	cursor: pointer;
+}
+
+.menuInfo{
+	width:95%;
+	margin:auto;
+	border:1px solid black;
+}
+
+.menuImg{
+	width:80%;
+	margin:0px;
+}
+
+.menuInfo>p{
+	font-size:1rem;
+}
+
+.price{
+	color:rgba(0,143,215,1);
+}

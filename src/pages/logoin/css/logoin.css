@@ -1,0 +1,54 @@
+.logoin{
+	position:relative;
+	top:50%;
+	width:80%;
+	margin:auto;
+	margin-top:10%;
+	border:1px solid red;
+}
+.logcommon{
+	display: flex;
+	position:relative;
+	width:80%;
+	margin:auto;
+	margin-top:2rem;
+	justify-content: center;
+	align-items: center;
+}
+.logcommon input{
+	margin:0px;
+	border:0px;
+	outline: 0px;
+	border-bottom-style: 1rem solid gray;
+	width:100%;
+	height:3rem;
+}
+
+.logbtn>input{
+	width:50%;
+}
+
+.logcommon>div:nth-child(1){
+	width:6rem;
+	font-size:2rem;
+	
+}
+
+.logcommon>div:nth-child(2){
+	width:50%;
+}
+.logcommon hr{
+	width:100%;
+	margin:0.1rem;
+}
+
+.logbtn>input{
+	letter-spacing: 1rem;
+	transition:all 0.7s;
+}
+
+.logbtn:hover>input{
+	font-size:2rem;
+	color:white;
+	background-color:rgba(0,143,215,0.9);
+}
