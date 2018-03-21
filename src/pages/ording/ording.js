@@ -47,6 +47,7 @@ let mapDispatchToProps = function(){
 //链接组件
 var SelectGroup = connect(mapStateToProps,mapDispatchToProps)(ChooseGroup);
 var getMsg = connect(mapStateToProps,mapDispatchToProps)(groupMsg)
+
 class Ording extends Component {
   constructor(props){
   	super(props);
@@ -55,9 +56,6 @@ class Ording extends Component {
   	}
   }
   componentWillMount(){
-  	setTimeout(function(){
-  		
-  	})
 	var socket = io("/");
 		//分发action
 		store.dispatch(produce_action("send_socket",socket));
