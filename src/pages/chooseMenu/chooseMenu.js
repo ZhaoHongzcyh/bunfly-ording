@@ -61,7 +61,7 @@ class ChooseMenu extends Component {
     var price = $(e.target).data().price;
     var data = "type=" + type +"&name=" + name + "&price=" + price + "&uid=" + uid;
     orderapi.ording(data).then(res=>{
-    	console.log(res);
+    	alert(res.msg);
     })
   }
   render() {

@@ -9,12 +9,16 @@ class ChooseGroup extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			socket:this.props.socket
+			socket:this.props.socket,
+			list:[]
 		}
 	}
 	componentWillMount(){
-		groupapi.addgroup("state=1").then(res=>{
-//			console.log(res);
+		groupapi.selectgroup("state=1").then(res=>{
+			this.setState({
+				list:res.list
+			})
+			console.log(res);
 		})
 	}
 	componentDidMount(){
@@ -28,7 +32,6 @@ class ChooseGroup extends Component{
 		
 	}
 	componentDidUpdate(){
-		console.log("更新");
 //		console.log(this.props.socket);
 	}
 	

@@ -17,7 +17,9 @@ class groupMsg extends Component{
 			console.log(this.state);
 		}
 		else{
-			
+			socket.on("order",res=>{
+				console.log(res);
+			})
 		}
 		
 	}

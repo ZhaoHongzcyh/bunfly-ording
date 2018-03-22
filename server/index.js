@@ -38,13 +38,13 @@ app.use(require("./router/logoin.js"))
 io.on("connection",function(socket){
 	// 用户模块路径（包括登录\更改密码）
 	console.log("用户链接成功");
-	app.use(require("./router/user.js")(socket));
+	app.use(require("./router/user.js")(socket,io));
 	
 	//分组事件
-	app.use(require("./router/group.js")(socket));
+	app.use(require("./router/group.js")(socket,io));
 	
 	//用户订餐路由
-	app.use(require("./router/order.js")(socket));
+	app.use(require("./router/order.js")(socket,io));
 	
 })
 

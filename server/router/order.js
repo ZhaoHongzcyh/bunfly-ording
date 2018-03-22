@@ -13,7 +13,7 @@ else{
 	 pool = mysql.createPool(mysql_dev.production);
 }
 
-var order = function(socket){
+var order = function(socket,io){
 	router.route("/api/order/userording").post(function(req,res){
 		req = req.body;
 		var str = "update user set ording=?,type=?,price=?,num=1,total=? where uuid=?";
@@ -36,8 +36,8 @@ var order = function(socket){
 						con.release();
 					}
 					else{
-						socket.emit("order",{msg:"消息发布成功"})
-						
+//						socket.emit("order",{msg:"消息发布成功"})
+						io.sockets.emit("order",{msg:"hello,all"});
 						res.send({
 							aid:1,
 							msg:"点餐成功"

@@ -14,6 +14,16 @@ else{
 	 pool = mysql.createPool(mysql_dev.production);
 }
 
+//用户分组详情查询（某组中具体有那些人）
+const selectGroupUser = function(userGroup,async,con){
+	var str = "select name,team,ording,price,num from user where team=?"
+	async.every(userGroup,function(data){
+		con.query(str,[data.team],function(err,end){
+			
+		})
+	})
+}
+
 //用户加入组
 var group = function(socket){
 	
@@ -30,8 +40,8 @@ var group = function(socket){
 
 	//查询所有聚餐组
 	router.route("/api/group/selectgroup").post(function(req,res){
-		var str = "select uuid,team,count(1) as counts from user group by team";
-		pool.getConnection(function(err,com){
+		var str = "select uuid,name,team,count(1) as counts from user group by team";
+		pool.getConnection(function(err,con){
 			if(err){
 				res.send({
 					aid:0,
