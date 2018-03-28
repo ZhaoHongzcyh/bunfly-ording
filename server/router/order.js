@@ -37,10 +37,11 @@ var order = function(socket,io){
 					}
 					else{
 //						socket.emit("order",{msg:"消息发布成功"})
-						io.sockets.emit("order",{msg:"hello,all"});
+						io.sockets.emit("order",{msg:"",menu:req.name});
 						res.send({
 							aid:1,
-							msg:"点餐成功"
+							msg:"点餐成功",
+							price:req.price
 						});
 						con.release();
 						
