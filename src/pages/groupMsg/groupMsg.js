@@ -11,7 +11,6 @@ class groupMsg extends Component{
 	//订餐消息事件监听
 	componentDidMount(){
 		//监听点菜消息
-		console.log("执行事件监听")
 		var socket = this.props.socket;
 		if(socket == null){
 			console.log(this.state);

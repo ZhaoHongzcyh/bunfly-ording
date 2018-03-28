@@ -69,6 +69,7 @@ class Logoin extends Component {
     		console.log(res);
     		window.localStorage.setItem("token",res.token);
     		window.localStorage.setItem("uid",res.uid);
+    		window.localStorage.setItem("name",obj.name);
     		this.setState({
     			logstate:true
     		})
