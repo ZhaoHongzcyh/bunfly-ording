@@ -1,0 +1,32 @@
+.allgroupinfo li{
+	list-style: none;
+	margin:0.5rem;
+}
+.allgroupinfo ul{
+	margin:0px;
+	padding:0px;
+}
+
+.allgroupinfo>ul>li{
+	border:1px solid red;	
+}
+
+.allgroup{
+	display:flex;
+}
+.allgroup>div{
+	width:50%;
+}
+
+.sureord{
+	text-align:right;
+	cursor: pointer;
+	color:rgb(0,143,215);
+}
+.addGroup{
+	color:rgb(0,143,215);
+	cursor: pointer;
+	margin-left:1rem;
+	text-align:right;
+	width:50%;
+}
