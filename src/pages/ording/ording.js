@@ -47,6 +47,7 @@ let mapDispatchToProps = function(){
 //链接组件
 var SelectGroup = connect(mapStateToProps,mapDispatchToProps)(ChooseGroup);
 var getMsg = connect(mapStateToProps,mapDispatchToProps)(groupMsg)
+
 class Ording extends Component {
   constructor(props){
   	super(props);
