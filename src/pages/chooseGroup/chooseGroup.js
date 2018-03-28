@@ -49,17 +49,18 @@ class ChooseGroup extends Component{
 		var team = $(e.target).data("team");
 		//向后端发送加入组请求
 		var data = "uuid=" + uuid  + "&team=" + team;
-		groupapi.addgroup(data).then((res)=>{
-			if(res.aid == 1){
-				window.localStorage.setItem("group",team);
-				that.appendPeople(team,that);
-			}
-			else{
-				alert(res.msg);
-			}
-		})
+		that.appendPeople(team,that,data);
+//		groupapi.addgroup(data).then((res)=>{
+//			if(res.aid == 1){
+//				window.localStorage.setItem("group",team);
+//				that.appendPeople(team,that);
+//			}
+//			else{
+//				alert(res.msg);
+//			}
+//		})
 	}
-	appendPeople(team,that){
+	appendPeople(team,that,data){
 		var name = window.localStorage.getItem("name");
 		var ary = [];
 		var list = that.state.list
@@ -72,7 +73,14 @@ class ChooseGroup extends Component{
 					list[i].child[k] = {};
 				}
 				else if(name == list[i].child[k].name){
-					list[i].child[k] = {};
+					if(list[i].child[k].role == 1){
+						alert("组长无法加入其他分组");
+						return false;
+					}
+					else{
+						list[i].child[k] = {};
+					}
+					
 				}
 			}
 		}
@@ -88,9 +96,19 @@ class ChooseGroup extends Component{
 				list[i].child = ary;
 			}
 		}
-		that.setState({
-			list:list
+		groupapi.addgroup(data).then((res)=>{
+			if(res.aid == 1){
+				window.localStorage.setItem("group",team);
+//				that.appendPeople(team,that);
+				that.setState({
+					list:list
+				})
+			}
+			else{
+				alert(res.msg);
+			}
 		})
+		
 	}
 	render(){
 		var that = this;
