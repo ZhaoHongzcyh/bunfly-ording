@@ -65,6 +65,7 @@ class Logoin extends Component {
     })
     
     userapi.logoin(body).then((res)=>{
+    	console.log(res);
     	if(res.aid == 1){
     		console.log(res);
     		window.localStorage.setItem("token",res.token);

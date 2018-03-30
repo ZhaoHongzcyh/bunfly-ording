@@ -50,16 +50,9 @@ class ChooseGroup extends Component{
 		//向后端发送加入组请求
 		var data = "uuid=" + uuid  + "&team=" + team;
 		that.appendPeople(team,that,data);
-//		groupapi.addgroup(data).then((res)=>{
-//			if(res.aid == 1){
-//				window.localStorage.setItem("group",team);
-//				that.appendPeople(team,that);
-//			}
-//			else{
-//				alert(res.msg);
-//			}
-//		})
 	}
+	
+	//添加就餐组
 	appendPeople(team,that,data){
 		var name = window.localStorage.getItem("name");
 		var ary = [];
@@ -110,6 +103,7 @@ class ChooseGroup extends Component{
 		})
 		
 	}
+	
 	render(){
 		var that = this;
 		return (

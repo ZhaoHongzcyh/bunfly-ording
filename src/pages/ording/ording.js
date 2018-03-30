@@ -53,15 +53,16 @@ class Ording extends Component {
   	super(props);
   	this.state = {
   		checkToken:true,
+  		socket:null
   	}
   }
   componentWillMount(){
 	var socket = io("/");
 		//分发action
 		store.dispatch(produce_action("send_socket",socket));
-//		socket.on("order",(res)=>{
-//			console.log(res);
-//		});
+		this.setState({
+			socket:socket
+		})
   }
   componentDidMount(){
 		
@@ -86,6 +87,13 @@ class Ording extends Component {
   			}
   		})
   	}
+  	
+  	//通知服务端
+  	var msg = {
+  			name:window.localStorage.getItem("name")
+  	}
+  	var socket = this.state.socket;
+  	socket.emit("entry",msg)
   }
   render() {
   	if(!this.state.checkToken){

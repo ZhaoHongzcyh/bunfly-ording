@@ -59,9 +59,10 @@ class ChooseMenu extends Component {
     var type = $(e.target).data().type;
     var name = $(e.target).data().name;
     var price = $(e.target).data().price;
-    var data = "type=" + type +"&name=" + name + "&price=" + price + "&uid=" + uid;
+    var username = window.localStorage.getItem("name");
+    var data = "type=" + type +"&name=" + name + "&price=" + price + "&uid=" + uid + "&user=" + username;
     orderapi.ording(data).then(res=>{
-    	alert(res.msg);
+//  	alert(res.msg);
     })
   }
   render() {

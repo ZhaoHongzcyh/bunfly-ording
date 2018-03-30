@@ -1,0 +1,73 @@
+.order{
+	position:relative;
+}
+.msgcontent{
+	position:relative;
+	overflow-y:hidden;
+	height:0rem;
+	padding-bottom:50%;
+	border:3px solid rgba(245,246,247,0.8);
+}
+
+.msginput{
+	position:relative;
+	width:100%;
+}
+.msginput>textarea{
+	display:block;
+	width:100%;
+	height:0rem;
+	padding-bottom:30%;
+	resize:none;
+	border:3px solid rgba(245,246,247,0.8);
+	outline: none;
+	overflow-y: hidden;
+	-webkit-resize:none;
+}
+
+.msginput>div{
+	position:absolute;
+	border:0.1rem solid gray;
+	width:6rem;
+	background-color:rgba(25,154,219,0.9);
+	text-align: center;
+	color:white;
+	right:1rem;
+	bottom:0rem;
+	cursor: pointer;
+}
+
+/*清除群消息按钮*/
+.clearmsg{
+	border:0.1rem solid gray;
+	position:absolute;
+	right:1rem;
+	bottom:0rem;
+	cursor: pointer;
+	width:6rem;
+	text-align:center;
+	background-color:rgba(25,154,219,0.9);
+	color:white;
+}
+
+/*用户列表*/
+.userlist{
+	position:absolute;
+	right:0rem;
+	top:0rem;
+	width:30%;
+	height:90%;
+	border:1px solid blue;
+}
+
+/*消息列表*/
+.allmsg{
+	position:absolute;
+	left:0rem;
+	width:70%;
+	height:100%;
+}
+
+.allmsg p{
+	word-break: break-all;
+}

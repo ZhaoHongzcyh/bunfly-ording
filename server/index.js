@@ -10,7 +10,7 @@ const bodyParser = require("body-parser");
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 const mysql_dev = require("./database.json");
-
+const socketmsg = require("./router/socket.js");
 const allUser_Connect = [];//用户socket链接 标识
 // 静态路径
 app.use(express.static(__dirname));
@@ -46,6 +46,8 @@ io.on("connection",function(socket){
 	//用户订餐路由
 	app.use(require("./router/order.js")(socket,io));
 	
+	//socket监听与事件提交
+	socketmsg(socket,io);
 })
 
 
