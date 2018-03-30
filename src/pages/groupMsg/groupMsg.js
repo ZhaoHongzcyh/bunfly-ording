@@ -8,7 +8,8 @@ class groupMsg extends Component{
 		super(props);
 		this.state = {
 			msg:[],
-			text:null
+			text:null,
+			alluser:[]
 		}
 	}
 	
@@ -43,7 +44,9 @@ class groupMsg extends Component{
 			
 			//监听聊天信息
 			this.recivemsg(socket);
-			this.getOnlineUser(socket)
+			this.getOnlineUser(socket);
+			
+			//
 		}
 		
 		//自动聚焦到消息框
@@ -71,8 +74,20 @@ class groupMsg extends Component{
 	
 	//向后端提交获取在线用户的请求
 	getOnlineUser(socket){
-		socket.emit("getOnlineUser",res=>{
-			console.log("在线人数")
+		socket.emit("getOnlineUser")
+		socket.on("alluser",res=>{
+			console.log("在线人数");
+			console.log(res);
+			if(res.aid == 0){
+				this.setState({
+					alluser:[]
+				})
+			}
+			else{
+				this.setState({
+					alluser:res.user
+				})
+			}
 		})
 	}
 	
@@ -140,6 +155,16 @@ class groupMsg extends Component{
 				
 					
 					<div className="userlist">
+						<h6>在线用户</h6>
+						{
+							this.state.alluser.map(function(data){
+								return (
+									<div key={data.uuid}>
+										<span identity={data.uuid}>{data.name}</span>
+									</div>
+								)
+							})
+						}
 					</div>
 				</div>
 				
