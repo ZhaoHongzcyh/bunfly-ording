@@ -153,12 +153,28 @@ class groupMsg extends Component{
 				id:privateid,
 				name:originName
 			}
+		
+		
+		//检查是否已交流过
+		var privatemsg = this.state.privatemsg;
+		if(privatemsg.length>0){
+			if(privatemsg[0][privateid] == undefined){
+				privatemsg[0][privateid] = [];
+			}
+		}
+		else{
+			privatemsg.unshift({});
+			privatemsg[0][privateid] = [];
+		}
+		
 		this.setState({
 			state:0,
+			privatemsg:privatemsg,
 			chatobject:chatobj,
 			privateobj:mainobj,
 			chatobj:privateid
 		})
+		console.log(privatemsg);
 	}
 	
 	//发送私聊信息
@@ -174,20 +190,28 @@ class groupMsg extends Component{
 			msg:window.localStorage.getItem("name") + " 说：" + obj.msg
 		}
 		var allUserMsg = this.state.privatemsg;
-		for(var k = 0; k < allUserMsg.length; k++){
-			if(allUserMsg[k][obj.id].length>0){
-				allUserMsg[k][obj.id].unshift(selfmsg);
-			}
-			else{
-				allUserMsg[k] = {};
-				allUserMsg[k][obj.id] = [];
-				allUserMsg[k][obj.id].unshift(selfmsg);
+		if(allUserMsg.length == 0){
+			allUserMsg.unshift({})
+			allUserMsg[0][obj.id] = [];
+			allUserMsg[0][obj.id].unshift(selfmsg);
+		}
+		else{
+			for(var k = 0; k < allUserMsg.length; k++){
+				if(allUserMsg[k][obj.id].length>0){
+					allUserMsg[k][obj.id].unshift(selfmsg);
+				}
+				else{
+					allUserMsg[k] = {};
+					allUserMsg[k][obj.id] = [];
+					allUserMsg[k][obj.id].unshift(selfmsg);
+				}
 			}
 		}
 		//更新消息池中的信息
 		this.setState({
 			privatemsg:allUserMsg
 		})
+		console.log("渲染");
 		console.log(this.state.privatemsg);
 		console.log(allUserMsg);
 	}
@@ -257,7 +281,14 @@ class groupMsg extends Component{
 			
 		})
 	}
-
+	
+	//返回群聊系统
+	returnGroup(){
+		this.setState({
+			state:1,
+			chatobject:"群聊中"
+		})
+	}
 	//渲染
 	render(){
 		var _this = this;
@@ -273,12 +304,8 @@ class groupMsg extends Component{
 						{
 							
 							(this.state.state == 0)?this.state.privatemsg.map(function(data){
-//								return (
-//									<p className="privatemsg" key={data.key}>
-//										<span>{data.msg}</span>
-//									</p>
-//								)
-								data[chatobj].map(function(dat){
+//								
+								return data[chatobj].map(function(dat){
 									return (
 										<p className="privatemsg">
 											<span>{dat.msg}</span>
@@ -309,7 +336,7 @@ class groupMsg extends Component{
 					
 					<div className="userlist">
 						<h6>在线用户</h6>
-							<span>群消息</span>
+							<span onClick={this.returnGroup.bind(this)}>群消息</span>
 							<span>{this.state.msg.length}</span>
 						{
 							this.state.alluser.map(function(data){
