@@ -15,7 +15,8 @@ class groupMsg extends Component{
 			state:1,//1代表群聊，0代表私聊
 			privateobj:{},//私聊对象
 			privatechat:{},//用于保存私人聊天信息
-			privatemsg:[]
+			privatemsg:[],
+			chatobj:null//聊天对象，用于储存聊天对象的id
 		}
 	}
 	
@@ -155,7 +156,8 @@ class groupMsg extends Component{
 		this.setState({
 			state:0,
 			chatobject:chatobj,
-			privateobj:mainobj
+			privateobj:mainobj,
+			chatobj:privateid
 		})
 	}
 	
@@ -165,6 +167,29 @@ class groupMsg extends Component{
 		obj.msg = this.state.text;
 		var socket = this.props.socket;
 		socket.emit("sendPrivateMsg",obj);
+		//推送消息之后，将发送的消息推入本地消息池
+		obj.key = new Date().getTime();
+		var selfmsg = {
+			key:new Date().getTime(),
+			msg:window.localStorage.getItem("name") + " 说：" + obj.msg
+		}
+		var allUserMsg = this.state.privatemsg;
+		for(var k = 0; k < allUserMsg.length; k++){
+			if(allUserMsg[k][obj.id].length>0){
+				allUserMsg[k][obj.id].unshift(selfmsg);
+			}
+			else{
+				allUserMsg[k] = {};
+				allUserMsg[k][obj.id] = [];
+				allUserMsg[k][obj.id].unshift(selfmsg);
+			}
+		}
+		//更新消息池中的信息
+		this.setState({
+			privatemsg:allUserMsg
+		})
+		console.log(this.state.privatemsg);
+		console.log(allUserMsg);
 	}
 	
 	//接收私聊信息且提醒当前用户有新消息了
@@ -189,7 +214,8 @@ class groupMsg extends Component{
 				name:window.localStorage.getItem("name")
 			}
 			_this.setState({
-				privateobj:mainobj
+				privateobj:mainobj,
+				chatobj:res.fromid
 			})
 			
 			//将私人聊天信息进行分类
@@ -205,9 +231,16 @@ class groupMsg extends Component{
 				privatechat[res.fromid] = [];
 				privatechat[res.fromid].unshift(privatemsgobj);
 			}
+//			_this.setState({
+//				privatemsg:privatechat[res.fromid]
+//			})
+			var privatemsg = _this.state.privatemsg;
+			privatemsg = [privatechat]
 			_this.setState({
-				privatemsg:privatechat[res.fromid]
+				privatemsg:privatemsg
 			})
+			console.log("消息");
+			console.log(_this.state.privatemsg);
 		})
 	}
 	//清除所有群聊消息
@@ -228,6 +261,7 @@ class groupMsg extends Component{
 	//渲染
 	render(){
 		var _this = this;
+		var chatobj = this.state.chatobj;
 		return(
 			<div className="order">
 				<div className="msgcontent">
@@ -239,11 +273,18 @@ class groupMsg extends Component{
 						{
 							
 							(this.state.state == 0)?this.state.privatemsg.map(function(data){
-								return (
-									<p className="privatemsg" key={data.key}>
-										<span>{data.msg}</span>
-									</p>
-								)
+//								return (
+//									<p className="privatemsg" key={data.key}>
+//										<span>{data.msg}</span>
+//									</p>
+//								)
+								data[chatobj].map(function(dat){
+									return (
+										<p className="privatemsg">
+											<span>{dat.msg}</span>
+										</p>
+									)
+								})
 							}):this.state.msg.map((data)=>{
 								if(data.state == 1){
 									return (
