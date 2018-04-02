@@ -1,6 +1,7 @@
 import React,{Component} from "react";
 import {BrowserRouter as Router,Route,Link} from "react-router-dom";
 import io from "socket.io-client";
+import $ from "jquery";
 import "./css/groupMsg.css"
 //定义组件
 class groupMsg extends Component{
@@ -9,7 +10,12 @@ class groupMsg extends Component{
 		this.state = {
 			msg:[],
 			text:null,
-			alluser:[]
+			alluser:[],
+			chatobject:"群聊中",
+			state:1,//1代表群聊，0代表私聊
+			privateobj:{},//私聊对象
+			privatechat:{},//用于保存私人聊天信息
+			privatemsg:[]
 		}
 	}
 	
@@ -28,7 +34,8 @@ class groupMsg extends Component{
 				var msgobj = {
 					 msg:null,
 					 name:res.user,
-					 menu:res.menu
+					 menu:res.menu,
+					 state:1
 				}
 				var ary = that.state.msg;
 				msgobj.menu = res.menu;
@@ -45,7 +52,7 @@ class groupMsg extends Component{
 			//监听聊天信息
 			this.recivemsg(socket);
 			this.getOnlineUser(socket);
-			
+			this.getPrivateMsg(socket);
 			//
 		}
 		
@@ -62,7 +69,18 @@ class groupMsg extends Component{
 	//组件移除生命周期
 	componentWillUnmount(){
 		var socket = this.props.socket;
+		
+		//移除订餐监听
 		socket.removeAllListeners("order");
+		
+		//移除该组件相关监听
+		socket.removeAllListeners("alluser");
+		
+		//移除群聊监听
+		socket.removeAllListeners("getmsg");
+		
+		//移除私聊信息监听
+		socket.removeAllListeners("getPrivateMsg");
 	}
 	
 	//textarea同步用户输入的内容
@@ -84,26 +102,31 @@ class groupMsg extends Component{
 				})
 			}
 			else{
+				
 				this.setState({
 					alluser:res.user
 				})
 			}
 		})
+		
+		//监听私聊信息
+		
 	}
 	
-	//用户接收消息
+	//用户接收群聊消息
 	recivemsg(socket){
 		socket.on("getmsg",res=>{
 			console.log(res);
 			var ary = this.state.msg;
 			res.key = new Date().getTime();
+			res.state = 2;
 			ary.unshift(res);
 			this.setState({
 				msg:ary
 			})
 		})
 	}
-	//用户发送消息
+	//用户发送群聊消息
 	sendmsg(){
 		var socket = this.props.socket;
 		if(this.state.text == null){
@@ -120,6 +143,73 @@ class groupMsg extends Component{
 		
 	}
 	
+	//用户私聊
+	chatPrivate(e){
+		var chatobj ="与" + $(e.target).data("name") + "聊天中";
+		var privateid = $(e.target).data("identity");
+		var originName = window.localStorage.getItem("name");
+		var mainobj = {
+				id:privateid,
+				name:originName
+			}
+		this.setState({
+			state:0,
+			chatobject:chatobj,
+			privateobj:mainobj
+		})
+	}
+	
+	//发送私聊信息
+	sendPrivateMsg(){
+		var obj = this.state.privateobj;
+		obj.msg = this.state.text;
+		var socket = this.props.socket;
+		socket.emit("sendPrivateMsg",obj);
+	}
+	
+	//接收私聊信息且提醒当前用户有新消息了
+	getPrivateMsg(socket){
+		var _this = this;
+		socket.on("getPrivateMsg",res=>{
+			console.log("私聊信息");
+			console.log(res);
+			for(var i = 0; i < _this.state.alluser.length; i++){
+				if(res.name == _this.state.alluser[i].name){
+					var ary = _this.state.alluser;
+					ary[i].reply.push(res);
+					_this.setState({
+						alluser:ary,
+						state:0,
+						chatobject:"与" + res.name + "聊天中"
+					})
+				}
+			}
+			var mainobj = {
+				id:res.fromid,
+				name:window.localStorage.getItem("name")
+			}
+			_this.setState({
+				privateobj:mainobj
+			})
+			
+			//将私人聊天信息进行分类
+			var privatechat = _this.state.privatechat;
+			var privatemsgobj = {
+				 key:new Date().getTime(),
+				 msg:res.name + " 说：" + res.msg
+			}
+			if(privatechat[res.fromid]){
+				privatechat[res.fromid].unshift(privatemsgobj);
+			}
+			else{
+				privatechat[res.fromid] = [];
+				privatechat[res.fromid].unshift(privatemsgobj);
+			}
+			_this.setState({
+				privatemsg:privatechat[res.fromid]
+			})
+		})
+	}
 	//清除所有群聊消息
 	clearGroupMsg(){
 		this.setState({
@@ -137,17 +227,39 @@ class groupMsg extends Component{
 
 	//渲染
 	render(){
+		var _this = this;
 		return(
 			<div className="order">
 				<div className="msgcontent">
+					
 					<div className="allmsg">
+						<div className="chatobject">
+							<div>{this.state.chatobject}</div>
+						</div>
 						{
-							this.state.msg.map((data)=>{
+							
+							(this.state.state == 0)?this.state.privatemsg.map(function(data){
 								return (
-									<p key={data.key}>
-										{data.msg}
+									<p className="privatemsg" key={data.key}>
+										<span>{data.msg}</span>
 									</p>
 								)
+							}):this.state.msg.map((data)=>{
+								if(data.state == 1){
+									return (
+										<p className="notice" key={data.key}>
+											<span>{data.msg}</span>
+										</p>
+									)
+								}
+								else if(data.state == 2){
+									return (
+										<p className="groupmsg">
+											{data.msg}
+										</p>
+									)
+								}
+								
 							})
 						}
 					</div>
@@ -156,11 +268,14 @@ class groupMsg extends Component{
 					
 					<div className="userlist">
 						<h6>在线用户</h6>
+							<span>群消息</span>
+							<span>{this.state.msg.length}</span>
 						{
 							this.state.alluser.map(function(data){
 								return (
 									<div key={data.uuid}>
-										<span identity={data.uuid}>{data.name}</span>
+										<span data-name={data.name} data-identity={data.uuid} onDoubleClick={_this.chatPrivate.bind(_this)}>{data.name}</span>
+										{(data.reply==[])?null:<span>{data.reply.length}</span>}
 									</div>
 								)
 							})
@@ -170,7 +285,14 @@ class groupMsg extends Component{
 				
 				<div className="msginput">
 					<textarea ref={(input)=>{this.text = input;}} value={this.state.text} onChange={this.asynctext.bind(this)}></textarea>
-					<div onClick={this.sendmsg.bind(this)}>发送</div>
+					{
+						(this.state.state==1)?(
+							<div onClick={this.sendmsg.bind(this)}>发送</div>
+						):(
+							<div onClick={this.sendPrivateMsg.bind(this)}>发送</div>
+						)
+					}
+					
 				</div>
 			</div>
 		)

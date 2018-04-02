@@ -39,7 +39,6 @@ var storageOnlineUser = function(id,name,socket){
 var selectAllUser = function(socket,io,pool){
 	pool.getConnection(function(err,con){
 		var str = "select *from socket";
-		console.log("执行了")
 		if(err){
 			io.sockets.emit("alluser",{aid:0,user:[]});
 		}
@@ -49,6 +48,9 @@ var selectAllUser = function(socket,io,pool){
 					io.sockets.emit("alluser",{aid:0,user:[]});
 				}
 				else{
+					for(var i = 0; i < f.length; i++){
+						f[i].reply = [];
+					}
 					io.sockets.emit("alluser",{aid:1,user:f});
 				}
 				con.release();
@@ -68,10 +70,10 @@ var changeUserState = function(socket,io,pool){
 		else{
 			con.query(str,[uuid],function(err,f){
 				if(err){
-					console.log("状态更改失败");
+					//console.log("状态更改失败");
 				}
 				else{
-					console.log("状态更改成功");
+					//console.log("状态更改成功");
 				}
 				con.release();
 				selectAllUser(socket,io,pool)
@@ -114,6 +116,18 @@ var skt = function(socket,io){
 	socket.on("disconnect",res=>{
 		changeUserState(socket,io,pool);
 	})
+	
+	//监听用户发送私聊信息
+	socket.on("sendPrivateMsg",res=>{
+		console.log("私聊内容");
+		console.log(res);
+		
+		//将信息发送给私聊对象
+//		io.sockets.connected[res.id].emit('getPrivateMsg',res);
+		res.fromid = socket.id;
+		io.to(res.id).emit("getPrivateMsg",res);
+	})
+	
 }
 
 module.exports = skt

@@ -37,6 +37,26 @@
 	cursor: pointer;
 }
 
+/*消息分类样式*/
+.notice{
+	font-size:0.2rem;
+	text-align: center;
+}
+
+.notice>span{
+	display:inline-block;
+	color:white;
+	background-color:rgba(48,164,223,0.9);
+}
+
+p.groupmsg{
+	font-size:0.8rem;
+}
+
+/*聊天对象*/
+.chatobject{
+	text-align:center;
+}
 /*清除群消息按钮*/
 .clearmsg{
 	border:0.1rem solid gray;
@@ -60,6 +80,13 @@
 	border:1px solid blue;
 }
 
+.userlist h6{
+	text-align:center;
+}
+.userlist>div{
+	font-size:small;
+	cursor: pointer;
+}
 /*消息列表*/
 .allmsg{
 	position:absolute;
