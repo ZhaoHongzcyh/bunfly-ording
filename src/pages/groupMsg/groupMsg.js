@@ -42,7 +42,6 @@ class groupMsg extends Component{
 				msgobj.menu = res.menu;
 				msgobj.msg = res.user + "预定了一份" + res.menu + "/价格为" + res.price;
 				msgobj.key = new Date().getTime();
-				console.log(1);
 				ary.unshift(msgobj);
 				that.setState({
 					msg:ary
@@ -95,8 +94,6 @@ class groupMsg extends Component{
 	getOnlineUser(socket){
 		socket.emit("getOnlineUser")
 		socket.on("alluser",res=>{
-			console.log("在线人数");
-			console.log(res);
 			if(res.aid == 0){
 				this.setState({
 					alluser:[]
@@ -117,7 +114,6 @@ class groupMsg extends Component{
 	//用户接收群聊消息
 	recivemsg(socket){
 		socket.on("getmsg",res=>{
-			console.log(res);
 			var ary = this.state.msg;
 			res.key = new Date().getTime();
 			res.state = 2;
@@ -174,7 +170,6 @@ class groupMsg extends Component{
 			privateobj:mainobj,
 			chatobj:privateid
 		})
-		console.log(privatemsg);
 	}
 	
 	//发送私聊信息
@@ -217,8 +212,6 @@ class groupMsg extends Component{
 	getPrivateMsg(socket){
 		var _this = this;
 		socket.on("getPrivateMsg",res=>{
-			console.log("私聊信息");
-			console.log(res);
 			for(var i = 0; i < _this.state.alluser.length; i++){
 				if(res.name == _this.state.alluser[i].name){
 					var ary = _this.state.alluser;
@@ -258,8 +251,6 @@ class groupMsg extends Component{
 				privateobj:mainobj,
 				chatobj:res.fromid
 			})
-			console.log("消息");
-			console.log(_this.state.privatemsg);
 		})
 	}
 	//清除所有群聊消息
