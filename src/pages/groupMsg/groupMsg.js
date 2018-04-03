@@ -211,9 +211,6 @@ class groupMsg extends Component{
 		this.setState({
 			privatemsg:allUserMsg
 		})
-		console.log("渲染");
-		console.log(this.state.privatemsg);
-		console.log(allUserMsg);
 	}
 	
 	//接收私聊信息且提醒当前用户有新消息了
@@ -237,10 +234,6 @@ class groupMsg extends Component{
 				id:res.fromid,
 				name:window.localStorage.getItem("name")
 			}
-			_this.setState({
-				privateobj:mainobj,
-				chatobj:res.fromid
-			})
 			
 			//将私人聊天信息进行分类
 			var privatechat = _this.state.privatechat;
@@ -248,7 +241,7 @@ class groupMsg extends Component{
 				 key:new Date().getTime(),
 				 msg:res.name + " 说：" + res.msg
 			}
-			if(privatechat[res.fromid]){
+			if(privatechat[res.fromid]!= undefined){
 				privatechat[res.fromid].unshift(privatemsgobj);
 			}
 			else{
@@ -261,7 +254,9 @@ class groupMsg extends Component{
 			var privatemsg = _this.state.privatemsg;
 			privatemsg = [privatechat]
 			_this.setState({
-				privatemsg:privatemsg
+				privatemsg:privatemsg,
+				privateobj:mainobj,
+				chatobj:res.fromid
 			})
 			console.log("消息");
 			console.log(_this.state.privatemsg);
@@ -269,9 +264,21 @@ class groupMsg extends Component{
 	}
 	//清除所有群聊消息
 	clearGroupMsg(){
-		this.setState({
-			msg:[]
-		})
+		//判断清除聊天信息的具体信息
+		var chatobj = this.state.chatobj;
+		var privatemsg = this.state.privatemsg;
+		if(chatobj == null){
+			this.setState({
+				msg:[]
+			})
+		}
+		else{
+			privatemsg[0][chatobj].length = 0;
+			this.setState({
+				privatemsg:privatemsg
+			});
+		}
+		
 	}
 	
 	//监听用户进入与离开（在线用户）
